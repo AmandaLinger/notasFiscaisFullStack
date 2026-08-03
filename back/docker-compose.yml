@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: notas_fiscais_container
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: notas_fiscais
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

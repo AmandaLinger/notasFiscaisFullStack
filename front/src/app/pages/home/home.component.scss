@@ -1,0 +1,31 @@
+
+.title-container h1{
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 0;
+
+  strong{
+    color: #65558F;
+  }
+}
+
+.subtitle{
+  font-size: 1.2rem;
+  color: #555;
+  font-weight: 600;
+
+  strong{
+    
+    text-decoration: underline;
+  }
+}
+
+.image-container{
+  display: flex;
+  justify-content: right;
+  transform: translateY(-100px) translateX(-100px);
+
+  img{
+    height: 600px;
+  }
+}

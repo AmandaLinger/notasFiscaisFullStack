@@ -1,0 +1,69 @@
+<main class="products-container">
+  <div class="title-container">
+    <h1>Lista de produtos</h1>
+    <p class="subtitle">Gerencie seus produtos de forma eficiente e organizada.</p>
+  </div>
+
+  <div id="data-grid-demo">
+    <dx-data-grid
+      id="gridContainer"
+      [dataSource]="dataSource"
+      keyExpr="id"
+      [showBorders]="true"
+    (onSaving)="onSavingProducts($event)"
+    >
+    <dxo-data-grid-paging [enabled]="false"></dxo-data-grid-paging>
+    <dxo-data-grid-editing
+      mode="popup"
+      [allowUpdating]="true"
+      [allowAdding]="true"
+      [allowDeleting]="true"
+    >
+      <dxo-data-grid-popup
+        title="Informações"
+        [showTitle]="true"
+        [width]="700"
+        [height]="525"
+      >
+      </dxo-data-grid-popup>
+
+
+      <dxo-data-grid-form>
+        <dxi-data-grid-item
+          itemType="group" [colCount]="2" [colSpan]="2">
+
+          <dxi-data-grid-item
+            dataField="nome">
+          </dxi-data-grid-item>
+
+          <dxi-data-grid-item
+            dataField="preco">
+          </dxi-data-grid-item>
+
+          <dxi-data-grid-item
+            dataField="descricao">
+          </dxi-data-grid-item>
+
+        </dxi-data-grid-item>
+      </dxo-data-grid-form>
+    </dxo-data-grid-editing>
+
+    <dxi-data-grid-column
+      dataField="id" dataType="number">
+    </dxi-data-grid-column>
+
+    <dxi-data-grid-column
+      dataField="nome" dataType="string">
+    </dxi-data-grid-column>
+
+    <dxi-data-grid-column
+      dataField="preco" dataType="number">
+    </dxi-data-grid-column>
+
+    <dxi-data-grid-column
+      dataField="descricao" dataType="string">
+    </dxi-data-grid-column>
+
+  </dx-data-grid>
+</div>
+</main>
