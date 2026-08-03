@@ -1,18 +1,22 @@
-import { Routes } from '@angular/router';
-import { LoginFormComponent, ResetPasswordFormComponent, CreateAccountFormComponent, ChangePasswordFormComponent } from './shared/components';
-import { AuthGuardService } from './shared/services';
-import { HomeComponent } from './pages/home/home.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-import { NotaGridAntigo } from './pages/notaGridAntigo/notaGridAntigo';
-import { Products } from './pages/products/products';
-import { Clients } from './pages/clients/clients';
-import {CidadeEstado} from './shared/components/cidade-estado/cidade-estado';
+import {Routes} from '@angular/router';
+import {
+  ChangePasswordFormComponent,
+  CreateAccountFormComponent,
+  LoginFormComponent,
+  ResetPasswordFormComponent
+} from './shared/components';
+import {AuthGuardService} from './shared/services';
+import {HomeComponent} from './pages/home/home.component';
+import {ProfileComponent} from './pages/profile/profile.component';
+import {Products} from './pages/products/products';
+import {Clients} from './pages/clients/clients';
 import {Teste} from './pages/teste/teste';
+import {Nota} from './pages/nota/nota';
 
 export const routes: Routes = [
   {
     path: 'nota',
-    component: NotaGridAntigo,
+    component: Nota,
     canActivate: [ AuthGuardService ]
   },
   {
