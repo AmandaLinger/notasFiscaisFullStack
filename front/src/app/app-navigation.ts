@@ -15,7 +15,7 @@ export const navigation: NavigationItem[] = [
       },
       {
         text: 'Notas Fiscais',
-        path: '/tasks'
+        path: '/nota'
       },
       {
         text: 'Produtos',

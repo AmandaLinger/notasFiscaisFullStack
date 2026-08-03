@@ -3,14 +3,16 @@ import { LoginFormComponent, ResetPasswordFormComponent, CreateAccountFormCompon
 import { AuthGuardService } from './shared/services';
 import { HomeComponent } from './pages/home/home.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { TasksComponent } from './pages/tasks/tasks.component';
+import { NotaGridAntigo } from './pages/notaGridAntigo/notaGridAntigo';
 import { Products } from './pages/products/products';
 import { Clients } from './pages/clients/clients';
+import {CidadeEstado} from './shared/components/cidade-estado/cidade-estado';
+import {Teste} from './pages/teste/teste';
 
 export const routes: Routes = [
   {
-    path: 'tasks',
-    component: TasksComponent,
+    path: 'nota',
+    component: NotaGridAntigo,
     canActivate: [ AuthGuardService ]
   },
   {
@@ -51,6 +53,11 @@ export const routes: Routes = [
   {
     path: 'clients',
     component: Clients,
+    canActivate: [ AuthGuardService ]
+  },
+  {
+    path: 'teste',
+    component: Teste,
     canActivate: [ AuthGuardService ]
   },
   {

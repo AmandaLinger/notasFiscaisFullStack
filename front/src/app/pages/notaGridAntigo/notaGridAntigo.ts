@@ -22,10 +22,10 @@ import {ItemNotaFiscalCadastro} from '../../interfaces/item-nota-fiscal-cadastro
 
 
 @Component({
-  styleUrls: [`./tasks.component.scss`],
+  styleUrls: [`./notaGridAntigo.scss`],
   standalone: true,
   selector: 'app-tasks',
-  templateUrl: `./tasks.component.html`,
+  templateUrl: `./notaGridAntigo.html`,
   imports: [
     CommonModule,
     DxDataGridModule,
@@ -39,7 +39,7 @@ import {ItemNotaFiscalCadastro} from '../../interfaces/item-nota-fiscal-cadastro
 
   ],
 })
-export class TasksComponent implements OnInit {
+export class NotaGridAntigo implements OnInit {
   constructor(
     private notaFiscalService: NotaFiscalService,
     private clienteService: ClienteService,
