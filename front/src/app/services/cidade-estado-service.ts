@@ -12,7 +12,11 @@ export class CidadeEstadoService {
 
 
   listarEstados(){
-    return this.http.get<CidadeEstadoService[]>(this.url);
+    return this.http.get<any[]>(this.url);
+  }
+
+  listarCidades(sigla: string){
+    return this.http.get<any[]>(`${this.url}/${sigla}/municipios`);
   }
 
 }

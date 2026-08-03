@@ -24,6 +24,10 @@ export const navigation: NavigationItem[] = [
       {
         text: 'Clientes',
         path: '/clients'
+      },
+      {
+        text: 'Calcular frete',
+        path: '/teste'
       }
     ]
   }
