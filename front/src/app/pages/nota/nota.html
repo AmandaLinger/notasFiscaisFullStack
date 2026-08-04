@@ -65,24 +65,49 @@
             [colCount]="2"
             [colSpan]="2"
           >
-            <dxi-data-grid-item class="ajuste-layout">
-              <div class="dx-field-label">Produto:</div>
-              <div class="dx-field-value">
-                <dx-select-box
-                  [items]="produtos"
-                  placeholder="Selecione um produto"
-                  [inputAttr]="{ 'aria-label': 'Simple Product' }"
-                  [showClearButton]="true"
-                  displayExpr="nome"
-                  valueExpr="nome"
-                  width="315px"
-                ></dx-select-box>
+            <div *ngFor="let item of itens; let i = index" class="item-container">
+              <div class="ajuste-layout">
+                <div class="dx-field-label">Produto:</div>
+                <div class="dx-field-value">
+                  <dx-select-box
+                    [items]="produtos"
+                    placeholder="Selecione um produto"
+                    [(value)]="item.produtoNome"
+                    [inputAttr]="{ 'aria-label': 'Simple Product' }"
+                    [showClearButton]="true"
+                    displayExpr="nome"
+                    valueExpr="nome"
+                    width="315px"
+                  ></dx-select-box>
+                </div>
               </div>
-            </dxi-data-grid-item>
 
-            <dxi-data-grid-item
-              dataField="Quantidade">
-            </dxi-data-grid-item>
+              <div class="ajuste-layout">
+                <div class="dx-field-label">Quantidade:</div>
+                <div class="dx-field-value">
+                  <dx-number-box
+                    [(value)]="item.quantidade"
+                    type="number"
+                    placeholder="Quantidade"
+                    width="315px">
+                  </dx-number-box>
+                </div>
+              </div>
+
+              <dx-button
+                class="btn-lixeira"
+                icon="trash"
+                hint="Excluir"
+                type="danger"
+                (onClick)="excluirLinha(i)">
+              </dx-button>
+            </div>
+
+            <dx-button
+              text="Adicionar Item"
+              icon="plus"
+              (onClick)="adicionarItem()">
+            </dx-button>
 
           </dxi-data-grid-item>
 
