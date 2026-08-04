@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {NotaFiscal} from '../interfaces/nota-fiscal';
 import {NotaFiscalCadastro} from '../interfaces/nota-fiscal-cadastro';
+import {Cliente} from '../interfaces/cliente';
+import {Produto} from '../interfaces/produto';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +29,14 @@ export class NotaFiscalService {
 
   deletar(e : NotaFiscalCadastro) {
     return this.http.delete<NotaFiscalCadastro>(`${this.api}/${e}`);
+  }
+
+  listarClientes() {
+    return this.http.get<Cliente[]>('http://localhost:8080/cliente');
+  }
+
+  listarProdutos() {
+    return this.http.get<Produto[]>('http://localhost:8080/produto');
   }
 
 }

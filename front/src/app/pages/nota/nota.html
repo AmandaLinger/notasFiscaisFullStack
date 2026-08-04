@@ -52,6 +52,7 @@
                   [showClearButton]="true"
                   displayExpr="nome"
                   valueExpr="nome"
+                  width="315px"
                 ></dx-select-box>
               </div>
             </dxi-data-grid-item>
@@ -64,7 +65,7 @@
             [colCount]="2"
             [colSpan]="2"
           >
-            <dxi-data-grid-item>
+            <dxi-data-grid-item class="ajuste-layout">
               <div class="dx-field-label">Produto:</div>
               <div class="dx-field-value">
                 <dx-select-box
@@ -74,6 +75,7 @@
                   [showClearButton]="true"
                   displayExpr="nome"
                   valueExpr="nome"
+                  width="315px"
                 ></dx-select-box>
               </div>
             </dxi-data-grid-item>
@@ -93,6 +95,10 @@
 
       <dxi-data-grid-column
         dataField="id">
+      </dxi-data-grid-column>
+
+      <dxi-data-grid-column
+        dataField="Número da nota">
       </dxi-data-grid-column>
 
       <dxi-data-grid-column

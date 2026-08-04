@@ -21,6 +21,16 @@ export class Nota  implements OnInit {
   produtos: Produto[] = [];
 
   ngOnInit() {
+    this.notaFiscalService.listar().subscribe((data) => {
+      this.notas = data;
+    });
 
+    this.notaFiscalService.listarClientes().subscribe((data) => {
+      this.clientes = data;
+    });
+
+    this.notaFiscalService.listarProdutos().subscribe((data) => {
+      this.produtos = data;
+    });
   }
 }
