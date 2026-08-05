@@ -8,9 +8,13 @@
     <dx-data-grid
       id="gridContainer"
       [dataSource]="notas"
-      keyExpr="ID"
+      keyExpr="numeroNotaFiscal"
       [showBorders]="true"
+      (onInitNewRow)="onInitNewRow($event)"
+      (onSaving)="onSavingNota($event)"
+      (onEditorPreparing)="onEditorPreparing($event)"
     >
+
       <dxo-data-grid-paging
         [enabled]="false">
       </dxo-data-grid-paging>
@@ -28,118 +32,136 @@
           [height]="525"
         >
         </dxo-data-grid-popup>
+
         <dxo-data-grid-form>
-          <dxi-data-grid-item itemType="group"
-                              caption="Dados da nota" [colCount]="2" [colSpan]="2">
+
+          <!-- Campos do popUp  -->
+          <dxi-data-grid-item
+            itemType="group"
+            caption="Dados da nota"
+            [colCount]="2" [colSpan]="2">
 
             <dxi-data-grid-item
-              dataField="Numero nota">
+              dataField="numeroNotaFiscal"
+              editorType="dxNumberBox"
+              [label]="{ text: 'Número da Nota Fiscal' }">
             </dxi-data-grid-item>
-
-
 
             <dxi-data-grid-item
-              dataField="Data">
+              dataField="data"
+              editorType="dxDateBox"
+              [label]="{ text: 'Data da Nota Fiscal' }">
             </dxi-data-grid-item>
 
-            <dxi-data-grid-item class="ajuste-layout">
-              <div class="dx-field-label">Cliente:</div>
-              <div class="dx-field-value">
-                <dx-select-box
-                  [items]="clientes"
-                  placeholder="Selecione uma cliente"
-                  [inputAttr]="{ 'aria-label': 'Simple Product' }"
-                  [showClearButton]="true"
-                  displayExpr="nome"
-                  valueExpr="nome"
-                  width="315px"
-                ></dx-select-box>
-              </div>
+            <dxi-data-grid-item
+              dataField="cliente">
             </dxi-data-grid-item>
 
           </dxi-data-grid-item>
 
           <dxi-data-grid-item
-            itemType="group"
-            caption="Itens"
-            [colCount]="2"
-            [colSpan]="2"
-          >
-            <div *ngFor="let item of itens; let i = index" class="item-container">
-              <div class="ajuste-layout">
-                <div class="dx-field-label">Produto:</div>
-                <div class="dx-field-value">
-                  <dx-select-box
-                    [items]="produtos"
-                    placeholder="Selecione um produto"
-                    [(value)]="item.produtoNome"
-                    [inputAttr]="{ 'aria-label': 'Simple Product' }"
-                    [showClearButton]="true"
-                    displayExpr="nome"
-                    valueExpr="nome"
-                    width="315px"
-                  ></dx-select-box>
-                </div>
-              </div>
-
-              <div class="ajuste-layout">
-                <div class="dx-field-label">Quantidade:</div>
-                <div class="dx-field-value">
-                  <dx-number-box
-                    [(value)]="item.quantidade"
-                    type="number"
-                    placeholder="Quantidade"
-                    width="315px">
-                  </dx-number-box>
-                </div>
-              </div>
-
-              <dx-button
-                class="btn-lixeira"
-                icon="trash"
-                hint="Excluir"
-                type="danger"
-                (onClick)="excluirLinha(i)">
-              </dx-button>
-            </div>
-
-            <dx-button
-              text="Adicionar Item"
-              icon="plus"
-              (onClick)="adicionarItem()">
-            </dx-button>
-
-          </dxi-data-grid-item>
+            dataField="itens"
+            class="style-subtitle"
+          ></dxi-data-grid-item>
 
         </dxo-data-grid-form>
+
+
       </dxo-data-grid-editing>
 
+
+      <!-- Colunas -->
+
       <dxi-data-grid-column
-        dataField="Prefix" caption="Notas fiscais" [width]="130">
+        dataField="id"
+        caption="ID">
       </dxi-data-grid-column>
 
       <dxi-data-grid-column
-        dataField="id">
+        dataField="numeroNotaFiscal"
+        caption="Número">
       </dxi-data-grid-column>
 
       <dxi-data-grid-column
-        dataField="Número da nota">
+        dataField="cliente"
+        caption="Cliente"
+        cellTemplate="clienteCellTemplate"
+        editCellTemplate="clienteEditCellTemplate"
+      >
       </dxi-data-grid-column>
 
       <dxi-data-grid-column
-        dataField="Cliente">
+        dataField="data"
+        dataType="date"
+        caption="Data">
       </dxi-data-grid-column>
 
       <dxi-data-grid-column
-        dataField="Data" dataType="date">
+        dataField="precoTotal"
+        caption="Valor Total">
       </dxi-data-grid-column>
 
       <dxi-data-grid-column
-        dataField="Total">
-      </dxi-data-grid-column>
+        dataField="itens"
+        [visible]="false"
+        editCellTemplate="itensEditCellTemplate">
+      ></dxi-data-grid-column>
 
-      <dxi-data-grid-column dataField="Itens" [visible]="false">
-      </dxi-data-grid-column>
+      <div *dxTemplate="let data of 'itensEditCellTemplate'">
+        {{ data | firstKeysToConsole}}
+        <dx-data-grid
+        [dataSource]="data.value"
+        [width]="650">
+
+          <dxo-data-grid-editing
+            mode="row"
+            [allowUpdating]="true"
+            [allowAdding]="true"
+            [allowDeleting]="true"
+          ></dxo-data-grid-editing>
+
+          <dxi-data-grid-column
+            dataField="produtoId"
+            caption="Produto"
+            editCellTemplate="produtoEditor"
+          ></dxi-data-grid-column>
+
+          <div *dxTemplate="let cell of 'produtoEditor'">
+            <dx-select-box
+              [items]="produtos"
+              displayExpr="nome"
+              valueExpr="id"
+              [(value)]="cell.data.produtoId"
+              (onValueChanged)="onProdutoChange($event, cell.data)">
+            ></dx-select-box>
+          </div>
+
+
+          <dxi-data-grid-column
+            dataField="quantidade"
+          ></dxi-data-grid-column>
+
+          <dxi-data-grid-column
+            caption="Subtotal"
+            [calculateCellValue]="calcularSubtotalProduto">
+          </dxi-data-grid-column>
+
+        </dx-data-grid>
+
+      </div>
+
+      <div *dxTemplate="let data of 'clienteCellTemplate'">
+        {{ data.value?.nome }}
+      </div>
+
+      <div *dxTemplate="let data of 'clienteEditCellTemplate'">
+        <dx-select-box>
+          [items]="clientes"
+          displayExpr="nome"
+          [(value)]="data.value">
+        </dx-select-box>
+      </div>
+
     </dx-data-grid>
   </div>
 </main>
