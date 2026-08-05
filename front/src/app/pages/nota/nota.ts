@@ -39,7 +39,6 @@ export class Nota  implements OnInit {
   clientes: Cliente[] = [];
   produtos: Produto[] = [];
   itens: ItemNotaFiscalCadastro[] = [];
-  clienteSelecionado!: number;
 
   ngOnInit() {
     this.carregarNotas();
@@ -69,13 +68,6 @@ export class Nota  implements OnInit {
         console.log(this.clientes);
       });
   }
-
-  novaNota : NotaFiscalCadastro = {
-  numeroNotaFiscal: null as any,
-  data: new Date().toISOString().substring(0,10),
-  codigoCliente: 0,
-  itens:[]
-}
 
   notaCadastro: NotaFiscalCadastro = {
     numeroNotaFiscal: 0,
@@ -171,7 +163,7 @@ export class Nota  implements OnInit {
       const nota: NotaFiscalCadastro = {
         numeroNotaFiscal: change.data.numeroNotaFiscal,
         data: new Date().toISOString().split('T')[0],
-        codigoCliente: this.clienteSelecionado,
+        codigoCliente: change.data.cliente.codigo,
         itens: change.data.itens ?? []
       };
 
@@ -198,17 +190,19 @@ export class Nota  implements OnInit {
   }
 
 
-  protected onClienteChange(e: any, item: Cliente) {
+  protected onClienteChange(e: any, nota: any) {
 
-    item.codigo = e.value;
+    console.log(nota)
+
+    nota.codigoCliente = e.value;
 
     const cliente = this.clientes.find(
-      c => c.codigo === item.codigo
+      c => c.codigo === e.value
     );
 
-    if (cliente) {
-      item.nome = cliente.nome;
-    }
+    nota.cliente = cliente;
+
+    console.log(nota)
   }
 
 
