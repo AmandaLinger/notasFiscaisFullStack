@@ -143,19 +143,19 @@ export class Nota  implements OnInit {
     console.log(item)
   }
 
-  salvarNota() {
-
-    this.notaFiscalService.salvar(this.notaCadastro)
-      .subscribe({
-        next: () => {
-          this.carregarNotas();
-        },
-        error: err => {
-          console.error(err);
-        }
-      });
-
-  }
+  // salvarNota() {
+  //
+  //   this.notaFiscalService.salvar(this.notaCadastro)
+  //     .subscribe({
+  //       next: () => {
+  //         this.carregarNotas();
+  //       },
+  //       error: err => {
+  //         console.error(err);
+  //       }
+  //     });
+  //
+  // }
 
   onSavingNota(e: any) {
 
@@ -196,6 +196,21 @@ export class Nota  implements OnInit {
     }
 
   }
+
+
+  protected onClienteChange(e: any, item: Cliente) {
+
+    item.codigo = e.value;
+
+    const cliente = this.clientes.find(
+      c => c.codigo === item.codigo
+    );
+
+    if (cliente) {
+      item.nome = cliente.nome;
+    }
+  }
+
 
   protected onProdutoChange(e: any, item: ItemNotaFiscalCadastro) {
 

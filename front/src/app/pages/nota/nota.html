@@ -154,11 +154,13 @@
         {{ data.value?.nome }}
       </div>
 
-      <div *dxTemplate="let data of 'clienteEditCellTemplate'">
-        <dx-select-box>
+      <div *dxTemplate="let vCliente of 'clienteEditCellTemplate'">
+        <dx-select-box
           [items]="clientes"
           displayExpr="nome"
-          [(value)]="data.value">
+          valueExpr="codigo"
+          [(value)]="vCliente.data.clienteId"
+          (onValueChanged)="onClienteChange($event, vCliente.data)">
         </dx-select-box>
       </div>
 
