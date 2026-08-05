@@ -5,6 +5,6 @@ export interface NotaFiscal {
     id: number;
     numeroNotaFiscal: number;
     data: string;
-    codigoCliente: Number;
+    cliente: Cliente;
     itens: ItemNotaFiscal[];
 }

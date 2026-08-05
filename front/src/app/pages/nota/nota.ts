@@ -131,28 +131,15 @@ export class Nota  implements OnInit {
     if (produto) {
       item.precoUnitario = produto.preco;
     }
-
-    console.log(item)
   }
-
-  // salvarNota() {
-  //
-  //   this.notaFiscalService.salvar(this.notaCadastro)
-  //     .subscribe({
-  //       next: () => {
-  //         this.carregarNotas();
-  //       },
-  //       error: err => {
-  //         console.error(err);
-  //       }
-  //     });
-  //
-  // }
 
   onSavingNota(e: any) {
 
     const change = e.changes[0];
-    console.log("change: " + change);
+
+    console.log("change =", change);
+    console.log("change.data =", change.data);
+    console.log("cliente =", change.data.cliente);
 
     if (!change) {
       return;
@@ -160,14 +147,15 @@ export class Nota  implements OnInit {
 
     if (change.type === 'insert') {
 
+      console.log(change.data);
+      console.log(change.data.cliente);
+
       const nota: NotaFiscalCadastro = {
         numeroNotaFiscal: change.data.numeroNotaFiscal,
         data: new Date().toISOString().split('T')[0],
         codigoCliente: change.data.cliente.codigo,
         itens: change.data.itens ?? []
       };
-
-      console.log("Enviando:", nota);
 
       e.cancel = true;
 
@@ -180,31 +168,20 @@ export class Nota  implements OnInit {
           },
           error: erro => console.error(erro)
         });
-
-      console.log('change.data:', JSON.stringify(change.data, null, 2));
-      console.log('DTO:', JSON.stringify(nota, null, 2));
-      console.log("DADOS DO GRID:", change.data);
-
     }
 
   }
 
-
-  protected onClienteChange(e: any, nota: any) {
-
-    console.log(nota)
-
-    nota.codigoCliente = e.value;
+  protected onClienteChange(e: any, cell: any) {
 
     const cliente = this.clientes.find(
       c => c.codigo === e.value
     );
 
-    nota.cliente = cliente;
-
-    console.log(nota)
+    if (cliente) {
+      cell.setValue(cliente);
+    }
   }
-
 
   protected onProdutoChange(e: any, item: ItemNotaFiscalCadastro) {
 
@@ -232,9 +209,4 @@ export class Nota  implements OnInit {
     return Number(rowData.quantidade) * Number(produto.preco);
   };
 
-
-  // onClienteSelecionado(e: any){
-  //   this.clienteSelecionado = e.value;
-  //   console.log("Cliente selecionado:", this.co);
-  // }
 }
