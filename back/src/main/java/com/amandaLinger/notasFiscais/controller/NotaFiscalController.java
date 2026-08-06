@@ -39,9 +39,9 @@ public class NotaFiscalController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity updateNota(@PathVariable Long id,@RequestBody @Valid List<ItemNotaFiscalDto> itens) {
-        notaFiscalService.updateNota(id,itens);
-        return ResponseEntity.status(HttpStatus.OK).body(itens);
+    public ResponseEntity updateNota(@PathVariable Long id,@RequestBody @Valid NotaFiscalDto notaFiscalDto) {
+        notaFiscalService.updateNota(id,notaFiscalDto);
+        return ResponseEntity.status(HttpStatus.OK).body(notaFiscalDto);
     }
 
     @GetMapping

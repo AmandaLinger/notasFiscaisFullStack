@@ -168,7 +168,29 @@ export class Nota  implements OnInit {
     }
 
     if(change.type === 'update') {
-      
+
+      const notaOriginal = {
+        ...change.oldData,
+        ...change.data
+      }
+
+      const notaAtualizacao =
+        this.converterParaAtualizacao(notaOriginal);
+
+      notaAtualizacao.numeroNotaFiscal =
+        notaOriginal.numeroNotaFiscal;
+
+      notaAtualizacao.data =
+        notaOriginal.data;
+
+      notaAtualizacao.codigoCliente =
+        notaOriginal.cliente.codigo;
+
+      this.notaFiscalService.atualizar(
+        notaAtualizacao.id,
+        notaAtualizacao
+      )
+        .subscribe(...)
     }
 
   }

@@ -95,26 +95,36 @@ public class NotaFiscalService {
     }
 
     @Transactional
-    public void updateNota(Long id, List<ItemNotaFiscalDto> itens) {
+    public void updateNota(Long id, NotaFiscalDto notaFiscalDto) {
+
         NotaFiscalModel notaFiscal = notaFiscalRepository.findById(id)
                 .orElseThrow(() -> new ValidacaoException("Nota não encontrada"));
 
+        notaFiscal.setNumeroNotaFiscal(notaFiscalDto.getNumeroNotaFiscal());
+        notaFiscal.setData(notaFiscalDto.getData());
+
+        ClienteModel cliente = clienteRepository
+                .findByCodigo(notaFiscalDto.getCodigoCliente())
+                        .orElseThrow(() -> new ValidacaoException(("Cliente não encontrado")));
+
+        notaFiscal.setCliente(cliente);
+
+
         notaFiscal.getItens().clear();
 
-
-        for (ItemNotaFiscalDto itemDto : itens) {
+        for(ItemNotaFiscalDto itemDto : notaFiscalDto.getItens()) {
             ProdutoModel produto = produtoRepository.findById(itemDto.getProdutoId())
                     .orElseThrow(() -> new ValidacaoException("Produto não encontrado"));
 
-
             ItemNotaFiscalModel item = new ItemNotaFiscalModel();
-            item.setProduto(produto);
-            item.setPrecoUnitario(produto.getPreco());
-            item.setQuantidade(itemDto.getQuantidade());
-            item.setNotaFiscal(notaFiscal);
-            notaFiscal.getItens().add(item);
 
-//            diminuiQuantidadePosCompra(itemDto);
+
+            item.setProduto(produto);
+            item.setQuantidade(itemDto.getQuantidade());
+            item.setPrecoUnitario(produto.getPreco());
+            item.setNotaFiscal(notaFiscal);
+
+            notaFiscal.getItens().add(item);
         }
 
         notaFiscalRepository.save(notaFiscal);
