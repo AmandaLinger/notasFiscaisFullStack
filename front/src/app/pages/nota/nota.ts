@@ -12,6 +12,7 @@ import {ProdutoService} from '../../services/produto-service';
 import {NotaFiscalCadastro} from '../../interfaces/nota-fiscal-cadastro';
 import {FirstKeysToConsolePipe} from '../../pipe/FirstKeysToConsolePipe';
 import {NotaFiscalAtualizacao} from '../../interfaces/nota-fiscal-atualizacao';
+import {ItemNotaFiscal} from '../../interfaces/item-nota-fiscal';
 
 @Component({
   selector: 'app-nota',
@@ -42,13 +43,15 @@ export class Nota  implements OnInit {
   itens: ItemNotaFiscalCadastro[] = [];
 
   ngOnInit() {
-    this.carregarNotas();
 
     this.listarClientes();
 
     this.notaFiscalService.listarProdutos().subscribe((data) => {
       this.produtos = data;
     });
+
+    this.carregarNotas();
+
   }
 
   carregarNotas(): void {
@@ -136,12 +139,49 @@ export class Nota  implements OnInit {
 
   onSavingNota(e: any) {
 
-    const change = e.changes[0];
+    console.log('onSavingNota fired', e);
+
+    const change = e.changes && e.changes[0];
 
     if (!change) {
+      console.warn('onSavingNota: no changes to process', e);
       return;
     }
 
+    console.log('Change:', change);
+
+    if (change.type === 'update') {
+
+      const notaAtual = e.component
+        .getDataSource()
+        .items()
+        .find((item: any) => item.id === change.key);
+
+      const dto = {
+        numeroNotaFiscal: change.data.numeroNotaFiscal ?? notaAtual.numeroNotaFiscal,
+        data: (change.data.data ? new Date(change.data.data).toISOString().split('T')[0]
+          : (notaAtual.data ? new Date(notaAtual.data).toISOString().split('T')[0] : new Date().toISOString().split('T')[0])),
+        codigoCliente: change.data.codigoCliente ?? change.data.cliente?.codigo ?? notaAtual.cliente?.codigo ?? notaAtual.codigoCliente,
+        itens: (change.data.itens ?? notaAtual.itens ?? []).map((item:any) => ({
+          produtoId: item.produto?.id ?? item.produtoId?.id ?? item.produtoId,
+          quantidade: item.quantidade,
+          precoUnitario: item.precoUnitario
+        }))
+      };
+
+      console.log('DTO:', JSON.stringify(dto, null, 2));
+
+      this.notaFiscalService.atualizar(change.key, dto)
+        .subscribe({
+          next: resposta => {
+            console.log("atualizado:", resposta);
+            this.notaFiscalService.listar()
+              .subscribe(notas => this.notas = notas);
+          }
+        });
+
+      e.cancel = true;
+    }
     if (change.type === 'insert') {
 
       console.log(change.data);
@@ -167,31 +207,32 @@ export class Nota  implements OnInit {
         });
     }
 
-    if(change.type === 'update') {
-
-      const notaOriginal = {
-        ...change.oldData,
-        ...change.data
-      }
-
-      const notaAtualizacao =
-        this.converterParaAtualizacao(notaOriginal);
-
-      notaAtualizacao.numeroNotaFiscal =
-        notaOriginal.numeroNotaFiscal;
-
-      notaAtualizacao.data =
-        notaOriginal.data;
-
-      notaAtualizacao.codigoCliente =
-        notaOriginal.cliente.codigo;
-
-      this.notaFiscalService.atualizar(
-        notaAtualizacao.id,
-        notaAtualizacao
-      )
-        .subscribe(...)
-    }
+    // if(change.type === 'update') {
+    //
+    //   console.log("CHANGE:", change);
+    //
+    //   const notaOriginal = this.notas.find(
+    //     n => n.id === change.key
+    //   );
+    //
+    //   console.log("Nota original:", notaOriginal);
+    //
+    //   if (!notaOriginal) {
+    //     console.error("Nota não encontrada!");
+    //     return;
+    //   }
+    //
+    //   const notaCompleta = {
+    //     ...notaOriginal,
+    //     ...change.data
+    //   };
+    //
+    //   console.log("Nota completa:", notaCompleta);
+    //
+    //   const notaAtualizacao = this.converterParaAtualizacao(notaCompleta);
+    //
+    //   console.log("DTO:", notaAtualizacao);
+    // }
 
   }
 
@@ -206,20 +247,20 @@ export class Nota  implements OnInit {
     }
   }
 
-  protected onProdutoChange(e: any, cell: any) {
-
-    console.log("CELL:", cell);
-    console.log("ITEM:", cell.data);
-
-
+  onProdutoChange(event: any, item: any) {
     const produto = this.produtos.find(
-      p => p.id === e.value
+      p => p.id === event.value
     );
 
+    item.produto = produto;
+
+    delete item.produtoId;
+
     if (produto) {
-      cell.setValue(produto);
-      cell.data.precoUnitario = produto.preco;
+      item.precoUnitario = produto.preco;
     }
+
+    console.log('Item atualizado:', item);
   }
 
   calcularSubtotalProduto = (rowData: any): number => {
@@ -236,23 +277,51 @@ export class Nota  implements OnInit {
   };
 
   onEditingStart(e: any){
-    console.log("NOTA: ", e.data);
-    console.log("ITENS: ", e.data.itens);
+    console.log('Produto da nota:', e.data.itens);
+    console.log('Lista produtos:', this.produtos);
   }
 
-  converterParaAtualizacao(nota: NotaFiscal): NotaFiscalAtualizacao{
-    const notaAtualizacao: NotaFiscalAtualizacao = {
-      id: nota.id,
+  converterParaAtualizacao(nota: NotaFiscal): NotaFiscalAtualizacao {
+    return {
       numeroNotaFiscal: nota.numeroNotaFiscal,
       data: nota.data,
       codigoCliente: nota.cliente.codigo,
-      itens: (nota.itens ?? []).map(item => ({
-        produtoId: item.produto.id,
+      itens: (nota.itens ?? []).map((item: any) => ({
+        produtoId: item.produto?.id ?? item.produtoId?.id ?? item.produtoId,
         quantidade: item.quantidade,
         precoUnitario: item.precoUnitario
       }))
     };
+  }
 
-    return notaAtualizacao;
+  converterItensParaEdicao(itens: ItemNotaFiscal[]): ItemNotaFiscalCadastro[] {
+    return itens.map(item => ({
+      produtoId: item.produto.id,
+      quantidade: item.quantidade,
+      precoUnitario: item.precoUnitario
+    }));
+  }
+
+
+  debugItens(valor: any) {
+    console.log('Itens no popup:', JSON.stringify(valor, null, 2));
+  }
+
+  produtoSelecionado(item: any): number | null {
+    return item.produto?.id ?? null;
+  }
+
+  onInitNewItem(e: any): void {
+    e.data.produto = null;
+    e.data.quantidade = 1;
+    e.data.precoUnitario = 0;
+  }
+
+  onItemChanged(data: any) {
+    console.log('Alterando itens:', data.value);
+
+    data.setValue([...data.value]);
+
+    console.log('setValue executado');
   }
 }

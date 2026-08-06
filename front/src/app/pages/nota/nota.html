@@ -8,7 +8,7 @@
     <dx-data-grid
       id="gridContainer"
       [dataSource]="notas"
-      keyExpr="numeroNotaFiscal"
+      keyExpr="id"
       [showBorders]="true"
       (onInitNewRow)="onInitNewRow($event)"
       (onSaving)="onSavingNota($event)"
@@ -110,9 +110,13 @@
 
       <div *dxTemplate="let data of 'itensEditCellTemplate'">
         {{ data | firstKeysToConsole}}
+
         <dx-data-grid
         [dataSource]="data.value"
-        [width]="650">
+        [width]="650"
+        (onInitNewRow)="onInitNewItem($event)"
+        (onRowUpdated)="onItemChanged(data)"
+        (onRowRemoved)="onItemChanged(data)">
 
           <dxo-data-grid-editing
             mode="row"
@@ -124,16 +128,26 @@
           <dxi-data-grid-column
             dataField="produto"
             caption="Produto"
+            cellTemplate="produtoCellTemplate"
             editCellTemplate="produtoEditor"
           ></dxi-data-grid-column>
 
+          <div *dxTemplate="let data of 'produtoCellTemplate'">
+            {{ data.value?.nome }}
+          </div>
+
           <div *dxTemplate="let cell of 'produtoEditor'">
+
+            {{cell.data | json}}
+            <br>
+            {{produtos | json}}
+
             <dx-select-box
               [items]="produtos"
               displayExpr="nome"
               valueExpr="id"
-              [value]="cell.data.produto?.id"
-              (onValueChanged)="onProdutoChange($event, cell)">
+              [value]="produtoSelecionado(cell.data)"
+              (onValueChanged)="onProdutoChange($event, cell.data)">
             ></dx-select-box>
           </div>
 

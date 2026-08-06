@@ -4,6 +4,7 @@ import {NotaFiscal} from '../interfaces/nota-fiscal';
 import {NotaFiscalCadastro} from '../interfaces/nota-fiscal-cadastro';
 import {Cliente} from '../interfaces/cliente';
 import {Produto} from '../interfaces/produto';
+import {NotaFiscalAtualizacao} from '../interfaces/nota-fiscal-atualizacao';
 
 @Injectable({
   providedIn: 'root',
@@ -23,12 +24,12 @@ export class NotaFiscalService {
     return this.http.post<NotaFiscal>(this.api, nota);
   };
 
-  atualizar(nota: NotaFiscalCadastro) {
-    return this.http.put<NotaFiscal>(this.api, nota);
+  atualizar(id: number, nota: NotaFiscalAtualizacao) {
+    return this.http.put(`${this.api}/${id}`, nota);
   }
 
-  deletar(e : NotaFiscalCadastro) {
-    return this.http.delete<NotaFiscalCadastro>(`${this.api}/${e}`);
+  deletar(id: number) {
+    return this.http.delete(`${this.api}/${id}`);
   }
 
   listarClientes() {
