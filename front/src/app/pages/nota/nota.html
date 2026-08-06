@@ -13,6 +13,7 @@
       (onInitNewRow)="onInitNewRow($event)"
       (onSaving)="onSavingNota($event)"
       (onEditorPreparing)="onEditorPreparing($event)"
+      (onEditingStart)="onEditingStart($event)">
     >
 
       <dxo-data-grid-paging
@@ -121,7 +122,7 @@
           ></dxo-data-grid-editing>
 
           <dxi-data-grid-column
-            dataField="produtoId"
+            dataField="produto"
             caption="Produto"
             editCellTemplate="produtoEditor"
           ></dxi-data-grid-column>
@@ -131,8 +132,8 @@
               [items]="produtos"
               displayExpr="nome"
               valueExpr="id"
-              [(value)]="cell.data.produtoId"
-              (onValueChanged)="onProdutoChange($event, cell.data)">
+              [value]="cell.data.produto?.id"
+              (onValueChanged)="onProdutoChange($event, cell)">
             ></dx-select-box>
           </div>
 

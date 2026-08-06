@@ -11,6 +11,7 @@ import {ClienteService} from '../../services/cliente-service';
 import {ProdutoService} from '../../services/produto-service';
 import {NotaFiscalCadastro} from '../../interfaces/nota-fiscal-cadastro';
 import {FirstKeysToConsolePipe} from '../../pipe/FirstKeysToConsolePipe';
+import {NotaFiscalAtualizacao} from '../../interfaces/nota-fiscal-atualizacao';
 
 @Component({
   selector: 'app-nota',
@@ -137,10 +138,6 @@ export class Nota  implements OnInit {
 
     const change = e.changes[0];
 
-    console.log("change =", change);
-    console.log("change.data =", change.data);
-    console.log("cliente =", change.data.cliente);
-
     if (!change) {
       return;
     }
@@ -170,6 +167,10 @@ export class Nota  implements OnInit {
         });
     }
 
+    if(change.type === 'update') {
+      
+    }
+
   }
 
   protected onClienteChange(e: any, cell: any) {
@@ -183,23 +184,26 @@ export class Nota  implements OnInit {
     }
   }
 
-  protected onProdutoChange(e: any, item: ItemNotaFiscalCadastro) {
+  protected onProdutoChange(e: any, cell: any) {
 
-    item.produtoId = e.value;
+    console.log("CELL:", cell);
+    console.log("ITEM:", cell.data);
+
 
     const produto = this.produtos.find(
       p => p.id === e.value
     );
 
     if (produto) {
-      item.precoUnitario = produto.preco;
+      cell.setValue(produto);
+      cell.data.precoUnitario = produto.preco;
     }
   }
 
-  calcularSubtotalProduto = (rowData: ItemNotaFiscalCadastro): number => {
+  calcularSubtotalProduto = (rowData: any): number => {
 
     const produto = this.produtos.find(
-      p => p.id === rowData.produtoId
+      p => p.id === rowData.produto
     );
 
     if (!produto || rowData.quantidade == null) {
@@ -209,4 +213,24 @@ export class Nota  implements OnInit {
     return Number(rowData.quantidade) * Number(produto.preco);
   };
 
+  onEditingStart(e: any){
+    console.log("NOTA: ", e.data);
+    console.log("ITENS: ", e.data.itens);
+  }
+
+  converterParaAtualizacao(nota: NotaFiscal): NotaFiscalAtualizacao{
+    const notaAtualizacao: NotaFiscalAtualizacao = {
+      id: nota.id,
+      numeroNotaFiscal: nota.numeroNotaFiscal,
+      data: nota.data,
+      codigoCliente: nota.cliente.codigo,
+      itens: (nota.itens ?? []).map(item => ({
+        produtoId: item.produto.id,
+        quantidade: item.quantidade,
+        precoUnitario: item.precoUnitario
+      }))
+    };
+
+    return notaAtualizacao;
+  }
 }
