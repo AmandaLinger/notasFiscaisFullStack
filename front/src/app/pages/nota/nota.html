@@ -109,12 +109,10 @@
       ></dxi-data-grid-column>
 
       <div *dxTemplate="let data of 'itensEditCellTemplate'">
-        {{ data | firstKeysToConsole}}
-
         <dx-data-grid
         [dataSource]="data.value"
         [width]="650"
-        (onInitNewRow)="onInitNewItem($event)"
+        (onRowInserted)="onItemChanged(data)"
         (onRowUpdated)="onItemChanged(data)"
         (onRowRemoved)="onItemChanged(data)">
 

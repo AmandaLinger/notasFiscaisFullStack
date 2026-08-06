@@ -138,16 +138,15 @@ export class Nota  implements OnInit {
   }
 
   onSavingNota(e: any) {
+    console.log('Quantidade de changes:', e.changes.length);
+    console.log('Changes completas:', e.changes);
 
-    console.log('onSavingNota fired', e);
-
-    const change = e.changes && e.changes[0];
-
-    if (!change) {
-      console.warn('onSavingNota: no changes to process', e);
+    if (!e.changes.length) {
+      console.log('Sem alterações');
       return;
     }
 
+    const change = e.changes[0];
     console.log('Change:', change);
 
     if (change.type === 'update') {
@@ -252,13 +251,16 @@ export class Nota  implements OnInit {
       p => p.id === event.value
     );
 
-    item.produto = produto;
+    if (produto) {
+      item.produto = produto;
+      item.precoUnitario = produto.preco;
+
+      if (!item.quantidade) {
+        item.quantidade = 1;
+      }
+    }
 
     delete item.produtoId;
-
-    if (produto) {
-      item.precoUnitario = produto.preco;
-    }
 
     console.log('Item atualizado:', item);
   }
@@ -318,10 +320,12 @@ export class Nota  implements OnInit {
   }
 
   onItemChanged(data: any) {
-    console.log('Alterando itens:', data.value);
+    const novosItens = data.value.map((item: any) => ({
+      ...item
+    }));
 
-    data.setValue([...data.value]);
+    console.log('Atualizando campo itens:', novosItens);
 
-    console.log('setValue executado');
+    data.setValue(novosItens);
   }
 }
