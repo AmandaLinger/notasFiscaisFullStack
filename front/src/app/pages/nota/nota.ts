@@ -165,6 +165,9 @@ export class Nota  implements OnInit {
           precoUnitario: item.precoUnitario
         }))
       };
+
+      e.cancel = true;
+
       this.notaFiscalService.atualizar(change.key, dto)
         .subscribe({
           next: resposta => {
@@ -193,6 +196,8 @@ export class Nota  implements OnInit {
         }))
       };
 
+      e.cancel = true;
+
       this.notaFiscalService.salvar(nota).subscribe({
         next: resposta => {
           console.log('Salvo:', resposta);
@@ -207,6 +212,23 @@ export class Nota  implements OnInit {
           console.error('Erro ao salvar:', erro);
         }
       });
+    }
+    if (change.type === 'remove') {
+
+      console.log('Nota que será excluída:', change.key);
+
+      e.cancel = true;
+
+      this.notaFiscalService.deletar(change.key)
+        .subscribe({
+          next: resposta => {
+            this.carregarNotas();
+          },
+
+          error: erro => {
+            console.error('Erro ao excluir nota:', erro);
+          }
+        });
     }
   }
 
