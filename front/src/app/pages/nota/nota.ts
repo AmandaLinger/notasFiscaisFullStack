@@ -214,34 +214,6 @@ export class Nota  implements OnInit {
         }
       });
     }
-
-    // if(change.type === 'update') {
-    //
-    //   console.log("CHANGE:", change);
-    //
-    //   const notaOriginal = this.notas.find(
-    //     n => n.id === change.key
-    //   );
-    //
-    //   console.log("Nota original:", notaOriginal);
-    //
-    //   if (!notaOriginal) {
-    //     console.error("Nota não encontrada!");
-    //     return;
-    //   }
-    //
-    //   const notaCompleta = {
-    //     ...notaOriginal,
-    //     ...change.data
-    //   };
-    //
-    //   console.log("Nota completa:", notaCompleta);
-    //
-    //   const notaAtualizacao = this.converterParaAtualizacao(notaCompleta);
-    //
-    //   console.log("DTO:", notaAtualizacao);
-    // }
-
   }
 
   protected onClienteChange(e: any, cell: any) {
@@ -275,16 +247,11 @@ export class Nota  implements OnInit {
   }
 
   calcularSubtotalProduto = (rowData: any): number => {
-
-    const produto = this.produtos.find(
-      p => p.id === rowData.produto
-    );
-
-    if (!produto || rowData.quantidade == null) {
+    if (rowData.quantidade == null || rowData.precoUnitario == null) {
       return 0;
     }
 
-    return Number(rowData.quantidade) * Number(produto.preco);
+    return Number(rowData.quantidade) * Number(rowData.precoUnitario);
   };
 
   onEditingStart(e: any){
