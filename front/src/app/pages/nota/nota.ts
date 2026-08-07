@@ -190,20 +190,29 @@ export class Nota  implements OnInit {
         numeroNotaFiscal: change.data.numeroNotaFiscal,
         data: new Date().toISOString().split('T')[0],
         codigoCliente: change.data.cliente.codigo,
-        itens: change.data.itens ?? []
+
+        itens: (change.data.itens ?? []).map((item: any) => ({
+          produtoId: item.produto.id,
+          quantidade: Number(item.quantidade),
+          precoUnitario: Number(item.precoUnitario)
+        }))
       };
+      console.log('NOTA QUE SERÁ ENVIADA:', JSON.stringify(nota, null, 2));
 
       e.cancel = true;
 
-      this.notaFiscalService.salvar(nota)
-        .subscribe({
-          next: resposta => {
-            console.log("Salvo:", resposta);
-            this.notaFiscalService.listar()
-              .subscribe(notas => this.notas = notas);
-          },
-          error: erro => console.error(erro)
-        });
+      this.notaFiscalService.salvar(nota).subscribe({
+        next: resposta => {
+          console.log('Salvo:', resposta);
+
+          this.notaFiscalService.listar()
+            .subscribe(notas => this.notas = notas);
+        },
+
+        error: erro => {
+          console.error('Erro ao salvar:', erro);
+        }
+      });
     }
 
     // if(change.type === 'update') {
