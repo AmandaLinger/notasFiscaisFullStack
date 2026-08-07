@@ -147,8 +147,6 @@ export class Nota  implements OnInit {
     }
 
     const change = e.changes[0];
-    console.log('Change:', change);
-
     if (change.type === 'update') {
 
       const notaAtual = e.component
@@ -167,24 +165,21 @@ export class Nota  implements OnInit {
           precoUnitario: item.precoUnitario
         }))
       };
-
-      console.log('DTO:', JSON.stringify(dto, null, 2));
-
       this.notaFiscalService.atualizar(change.key, dto)
         .subscribe({
           next: resposta => {
             console.log("atualizado:", resposta);
+
+            e.component.cancelEditData();
+
             this.notaFiscalService.listar()
               .subscribe(notas => this.notas = notas);
+
           }
         });
 
-      e.cancel = true;
     }
     if (change.type === 'insert') {
-
-      console.log(change.data);
-      console.log(change.data.cliente);
 
       const nota: NotaFiscalCadastro = {
         numeroNotaFiscal: change.data.numeroNotaFiscal,
@@ -197,13 +192,12 @@ export class Nota  implements OnInit {
           precoUnitario: Number(item.precoUnitario)
         }))
       };
-      console.log('NOTA QUE SERÁ ENVIADA:', JSON.stringify(nota, null, 2));
-
-      e.cancel = true;
 
       this.notaFiscalService.salvar(nota).subscribe({
         next: resposta => {
           console.log('Salvo:', resposta);
+
+          e.component.cancelEditData();
 
           this.notaFiscalService.listar()
             .subscribe(notas => this.notas = notas);
@@ -254,10 +248,6 @@ export class Nota  implements OnInit {
     return Number(rowData.quantidade) * Number(rowData.precoUnitario);
   };
 
-  onEditingStart(e: any){
-    console.log('Produto da nota:', e.data.itens);
-    console.log('Lista produtos:', this.produtos);
-  }
 
   converterParaAtualizacao(nota: NotaFiscal): NotaFiscalAtualizacao {
     return {
@@ -281,10 +271,6 @@ export class Nota  implements OnInit {
   }
 
 
-  debugItens(valor: any) {
-    console.log('Itens no popup:', JSON.stringify(valor, null, 2));
-  }
-
   produtoSelecionado(item: any): number | null {
     return item.produto?.id ?? null;
   }
@@ -299,8 +285,6 @@ export class Nota  implements OnInit {
     const novosItens = data.value.map((item: any) => ({
       ...item
     }));
-
-    console.log('Atualizando campo itens:', novosItens);
 
     data.setValue(novosItens);
   }
