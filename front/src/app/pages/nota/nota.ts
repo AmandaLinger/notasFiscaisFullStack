@@ -23,8 +23,7 @@ import {ItemNotaFiscal} from '../../interfaces/item-nota-fiscal';
     DxSelectBoxModule,
     DxButtonModule,
     DxTextBoxModule,
-    DxNumberBoxModule,
-    FirstKeysToConsolePipe,
+    DxNumberBoxModule
   ],
   templateUrl: './nota.html',
   styleUrl: './nota.scss',
@@ -32,9 +31,7 @@ import {ItemNotaFiscal} from '../../interfaces/item-nota-fiscal';
 export class Nota  implements OnInit {
 
   constructor(
-    private notaFiscalService: NotaFiscalService,
-    private clienteService: ClienteService,
-    private produtoService: ProdutoService,
+    private notaFiscalService: NotaFiscalService
   ){}
 
   notas: NotaFiscal[] = [];
@@ -80,12 +77,6 @@ export class Nota  implements OnInit {
     itens: []
   };
 
-  notaInicial = {
-    numeroNotaFiscal: 0,
-    data: new Date(),
-    codigoCliente: null,
-    itens: []
-  };
 
   onInitNewRow(e: any): void {
     e.data.numeroNotaFiscal = null;
@@ -120,10 +111,6 @@ export class Nota  implements OnInit {
       precoUnitario: 0
     });
 
-  }
-
-  calcularSubtotal(item:any): number{
-    return item.quantidade*item.precoUnitario;
   }
 
   onValueChanged(item: ItemNotaFiscalCadastro) {

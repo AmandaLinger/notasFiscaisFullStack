@@ -135,10 +135,6 @@
 
           <div *dxTemplate="let cell of 'produtoEditor'">
 
-            {{cell.data | json}}
-            <br>
-            {{produtos | json}}
-
             <dx-select-box
               [items]="produtos"
               displayExpr="nome"
