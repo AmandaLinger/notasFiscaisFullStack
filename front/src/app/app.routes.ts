@@ -10,7 +10,7 @@ import {HomeComponent} from './pages/home/home.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {Products} from './pages/products/products';
 import {Clients} from './pages/clients/clients';
-import {Teste} from './pages/teste/teste';
+import {CidadeEstadoPage} from './pages/cidadeEstadoPage/cidadeEstadoPage';
 import {Nota} from './pages/nota/nota';
 
 export const routes: Routes = [
@@ -61,7 +61,7 @@ export const routes: Routes = [
   },
   {
     path: 'teste',
-    component: Teste,
+    component: CidadeEstadoPage,
     canActivate: [ AuthGuardService ]
   },
   {

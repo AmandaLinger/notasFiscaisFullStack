@@ -1,0 +1,25 @@
+.dx-field{
+  display: flex;
+  align-items: center;
+}
+
+.dx-field-label{
+  font-size: 16px;
+}
+
+.btn-cidade-estado{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+button{
+  padding: 8px;
+  border-radius: 4px;
+
+  border: none;
+  background: #4e395d;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
