@@ -279,7 +279,6 @@ export class Nota  implements OnInit {
     }));
   }
 
-
   produtoSelecionado(item: any): number | null {
     return item.produto?.id ?? null;
   }
