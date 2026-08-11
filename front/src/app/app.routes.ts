@@ -12,7 +12,6 @@ import {Products} from './pages/products/products';
 import {Clients} from './pages/clients/clients';
 import {CidadeEstadoPage} from './pages/cidadeEstadoPage/cidadeEstadoPage';
 import {Nota} from './pages/nota/nota';
-
 export const routes: Routes = [
   {
     path: 'nota',

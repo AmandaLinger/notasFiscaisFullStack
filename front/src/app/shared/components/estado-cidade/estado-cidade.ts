@@ -16,11 +16,14 @@ import {Municipio} from '../../../interfaces/cidadeEstado/municipio';
 export class EstadoCidade {
 
   estados: Estado[] = [];
-  municipios:Municipio[] = [];
-
+  municipios: Municipio[] = [];
 
   @Input()
-  estadoSelecionado:any = {}
+  estadoSelecionado: any = {
+    id: 35,
+    sigla: 'SP',
+    nome: 'São Paulo',
+  };
 
   @Output()
   estadoSelecionadoChange = new EventEmitter<Estado>();
@@ -40,8 +43,16 @@ export class EstadoCidade {
 
   getEstados(){
     this.cidadeEstadoService.listarEstados().subscribe({
-      next: (estados) => {
+      next: (estados: Estado[]) => {
         this.estados = estados;
+
+        const estadoPadrao = this.estados.find((estado) =>
+          estado.sigla === 'SP');
+
+        if (estadoPadrao) {
+          this.estadoSelecionado = estadoPadrao;
+          this.aoSelecionarEstado({ value: estadoPadrao });
+        }
       },
       error: (err) => console.error('Erro ao carregar estados', err),
     });
