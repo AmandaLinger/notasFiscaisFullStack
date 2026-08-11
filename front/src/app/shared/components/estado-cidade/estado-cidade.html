@@ -1,0 +1,44 @@
+<div class="container-component">
+  <div class="dx-field">
+    <div class="dx-field-label">Estado</div>
+    <div class="dx-field-value">
+      <dx-select-box
+        [items]="estados"
+        placeholder="Selecione um estado"
+        [inputAttr]="{ 'aria-label': 'Simple Product' }"
+        [showClearButton]="true"
+        displayExpr="nome"
+        [(value)]="estadoSelecionado"
+        (onValueChanged)="aoSelecionarEstado($event)"
+      ></dx-select-box>
+    </div>
+  </div>
+
+  <div class="dx-field">
+    <div class="dx-field-label">Cidade</div>
+    <div class="dx-field-value">
+      <dx-select-box
+        [items]="municipios"
+        placeholder="Selecione uma cidade"
+        [inputAttr]="{ 'aria-label': 'Simple Product' }"
+        [showClearButton]="true"
+        displayExpr="nome"
+        [(value)]="municipioSelecionado"
+        (onValueChanged)="aoSelecionarMunicipio($event)"
+      ></dx-select-box>
+    </div>
+  </div>
+
+  <div class="btn-cidade-estado">
+    <dx-button
+      stylingMode="outlined"
+      text="Calcular frete"
+      type="normal"
+      [width]="120"
+      (onClick)="calculaFrete()"
+    >
+    </dx-button>
+  </div>
+
+
+</div>
