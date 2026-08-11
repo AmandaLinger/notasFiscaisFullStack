@@ -7,10 +7,7 @@ import {Cliente} from '../../interfaces/cliente';
 import {Produto} from '../../interfaces/produto';
 import {ItemNotaFiscalCadastro} from '../../interfaces/item-nota-fiscal-cadastro';
 import {DxButtonModule} from 'devextreme-angular/ui/button';
-import {ClienteService} from '../../services/cliente-service';
-import {ProdutoService} from '../../services/produto-service';
 import {NotaFiscalCadastro} from '../../interfaces/nota-fiscal-cadastro';
-import {FirstKeysToConsolePipe} from '../../pipe/FirstKeysToConsolePipe';
 import {NotaFiscalAtualizacao} from '../../interfaces/nota-fiscal-atualizacao';
 import {ItemNotaFiscal} from '../../interfaces/item-nota-fiscal';
 
@@ -77,6 +74,33 @@ export class Nota  implements OnInit {
     itens: []
   };
 
+  private formatarDataParaString(data: any): string {
+    if (!data) {
+      return '';
+    }
+
+    if (data instanceof Date) {
+      const ano = data.getFullYear();
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const dia = String(data.getDate()).padStart(2, '0');
+
+      return `${ano}-${mes}-${dia}`;
+    }
+
+    if (typeof data === 'string') {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+        return data;
+      }
+
+      const [ano, mes, dia] = data.split('T')[0].split('-');
+
+      if (ano && mes && dia) {
+        return `${ano}-${mes}-${dia}`;
+      }
+    }
+
+    return '';
+  }
 
   onInitNewRow(e: any): void {
     e.data.numeroNotaFiscal = null;
@@ -143,8 +167,7 @@ export class Nota  implements OnInit {
 
       const dto = {
         numeroNotaFiscal: change.data.numeroNotaFiscal ?? notaAtual.numeroNotaFiscal,
-        data: (change.data.data ? new Date(change.data.data).toISOString().split('T')[0]
-          : (notaAtual.data ? new Date(notaAtual.data).toISOString().split('T')[0] : new Date().toISOString().split('T')[0])),
+        data: this.formatarDataParaString(change.data.data ?? notaAtual.data ?? new Date()),
         codigoCliente: change.data.codigoCliente ?? change.data.cliente?.codigo ?? notaAtual.cliente?.codigo ?? notaAtual.codigoCliente,
         itens: (change.data.itens ?? notaAtual.itens ?? []).map((item:any) => ({
           produtoId: item.produto?.id ?? item.produtoId?.id ?? item.produtoId,
@@ -173,11 +196,11 @@ export class Nota  implements OnInit {
 
       const nota: NotaFiscalCadastro = {
         numeroNotaFiscal: change.data.numeroNotaFiscal,
-        data: new Date().toISOString().split('T')[0],
-        codigoCliente: change.data.cliente.codigo,
+        data: this.formatarDataParaString(change.data.data ?? new Date()),
+        codigoCliente: change.data.cliente?.codigo ?? change.data.codigoCliente,
 
         itens: (change.data.itens ?? []).map((item: any) => ({
-          produtoId: item.produto.id,
+          produtoId: item.produto?.id ?? item.produtoId,
           quantidade: Number(item.quantidade),
           precoUnitario: Number(item.precoUnitario)
         }))
