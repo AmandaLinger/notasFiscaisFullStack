@@ -1,8 +1,10 @@
-<h1>📑​ Sistema back-end de notas fiscais</h1>
+<h1>📑​ Sistema FullStack de notas fiscais</h1>
 </br>
-<h2>API REST desenvolvida em Java com Spring Boot para gerenciamento de clientes, produtos e notas fiscais.</h2>
+<h2>Front End (Angular + DevExtreme) + API REST  desenvolvida em Java com Spring Boot para gerenciamento de clientes, produtos e notas fiscais.</h2>
 </br>
 <h3>Tecnologias utilizadas:</h3>
+<p>⛏️​ Angular</p>
+<p>⛏️​ DevExtreme</p>
 <p>⛏️​ Java 21</p>
 <p>⛏️​ Spring Boot</p>
 <p>⛏️​ Spring Data JPA</p>
